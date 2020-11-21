@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
     private var dessertsSold = 0
+    private lateinit var dessertTimer: DessertTimer
 
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
@@ -76,9 +77,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             onDessertClicked()
         }
 
+        dessertTimer = DessertTimer()
+
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
+
 
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
@@ -153,9 +157,14 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onStart() {
         super.onStart()
-        Log.i("MainActivity", "OnStartCalled")
-
+        dessertTimer.startTimer()
         //Timber log statement is shorter than the normal log statement and also does not require the tag
         Timber.i("onStartCalled and timber used")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dessertTimer.stopTimer()
+        Timber.i("onStopCalled and timber used")
     }
 }
