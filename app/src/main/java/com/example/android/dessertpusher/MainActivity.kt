@@ -18,6 +18,7 @@ package com.example.android.dessertpusher
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -28,6 +29,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
+
+
+const val KEY_REVENUE = "key_revenue"
+const val KEY_DESSERT_SOLD = "key_dessert_sold"
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -78,6 +83,13 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         }
 
         dessertTimer = DessertTimer(this.lifecycle)
+
+
+        //Agar revenue ki value store hui hai yaniki savedInstance call hua hai to revenue ki value update krdenge
+        if(savedInstanceState != null){
+            revenue = savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD)
+        }
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -166,5 +178,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         super.onStop()
 //        dessertTimer.stopTimer()
         Timber.i("onStopCalled and timber used")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_DESSERT_SOLD, dessertsSold)
+        Timber.i("onSavedInstanceState is called")
     }
 }
